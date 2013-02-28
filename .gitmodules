@@ -7,3 +7,6 @@
 [submodule "bundle/vim-gitgutter"]
 	path = bundle/vim-gitgutter
 	url = git://github.com/airblade/vim-gitgutter.git
+[submodule "bundle/SearchParty"]
+	path = bundle/SearchParty
+	url = https://github.com/dahu/SearchParty
