@@ -1,0 +1,1 @@
+vis.vba: call delete('/Users/jason/.vim/plugin/visPlugin.vim')|call delete('/Users/jason/.vim/autoload/vis.vim')|call delete('/Users/jason/.vim/plugin/cecutil.vim')|call delete('/Users/jason/.vim/doc/vis.txt')

@@ -21,6 +21,10 @@ set pastetoggle=<F12>
 syntax on
 highlight clear SignColumn
 
+if has('balloon_eval') 
+    set ballooneval
+endif
+
 " Tell vim to remember certain things when we exit
 "  '10  :  marks will be remembered for up to 10 previously edited files
 "  "100 :  will save up to 100 lines for each register
@@ -29,20 +33,7 @@ highlight clear SignColumn
 "  n... :  where to save the viminfo files
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
-" Search for selected text, forwards or backwards.
-vnoremap <silent> * :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy/<C-R><C-R>=substitute(
-  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-vnoremap <silent> # :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy?<C-R><C-R>=substitute(
-  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-
 " xnoremap <space>c :!octave --silent \| cut -c8-<cr>
-
 
 " CommandT (P in my case) Power!
 " ------------------------------------------------------------
@@ -68,9 +59,16 @@ let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
 nmap <Leader>e :Errors<CR>
 " ------------------------------------------------------------
 
-" Tagbar of awesome
+" Tagbar, does't like #!/usr/bin/env node, so I yanked it
 " ------------------------------------------------------------
-nmap <Leader>r :TagbarToggle<CR>
+" nmap <Leader>r :TagbarToggle<CR>
+" ------------------------------------------------------------
+
+
+" Long bookmarks
+" ------------------------------------------------------------
+nnoremap <Leader>L :Bookmark 
+nnoremap <Leader>l :GotoBookmark 
 " ------------------------------------------------------------
 
 " Multi Cursor
@@ -94,6 +92,13 @@ nnoremap <Leader>w :<c-u>call MultiCursorSearch('<c-r><c-w>')<cr>
 let g:multicursor_quit = "<Leader>C"
 " ------------------------------------------------------------
 
+" Indent guide
+" ------------------------------------------------------------
+let g:indent_guides_guide_size=1
+let g:indent_guides_start_level=2
+let g:indent_guides_enable_on_vim_startup=1
+" ------------------------------------------------------------
+
 " GIT Gutter
 " ------------------------------------------------------------
 "  Toggle gutter symbols
@@ -101,6 +106,7 @@ let g:multicursor_quit = "<Leader>C"
 " ------------------------------------------------------------
 
 " Restore last position
+" ------------------------------------------------------------
 function! ResCur()
   if line("'\"") <= line("$")
     normal! g`"
@@ -112,3 +118,93 @@ augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
 augroup END
+" ------------------------------------------------------------
+
+" Visual search & replace
+" ------------------------------------------------------------
+" Escape special characters in a string for exact matching.
+" This is useful to copying strings from the file to the search tool
+" Based on this - http://peterodding.com/code/vim/profile/autoload/xolox/escape.vim
+function! EscapeString (string)
+  let string=a:string
+  " Escape regex characters
+  let string = escape(string, '^$.*\/~[]')
+  " Escape the line endings
+  let string = substitute(string, '\n', '\\n', 'g')
+  return string
+endfunction
+
+" Get the current visual block for search and replaces
+" This function passed the visual block through a string escape function
+" Based on this - http://stackoverflow.com/questions/676600/vim-replace-selected-text/677918#677918
+function! GetVisual() range
+  " Save the current register and clipboard
+  let reg_save = getreg('"')
+  let regtype_save = getregtype('"')
+  let cb_save = &clipboard
+  set clipboard&
+
+  " Put the current visual selection in the " register
+  normal! ""gvy
+  let selection = getreg('"')
+
+  " Put the saved registers and clipboards back
+  call setreg('"', reg_save, regtype_save)
+  let &clipboard = cb_save
+
+  "Escape any special characters in the selection
+  let escaped_selection = EscapeString(selection)
+
+  return escaped_selection
+endfunction
+
+" Start the find and replace command across the entire file
+vnoremap <Space>r <Esc>:%s/<c-r>=GetVisual()<cr>/
+
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+" ------------------------------------------------------------
+
+" Do math on visual selections
+" ------------------------------------------------------------
+function MyCalc(str)
+  if exists("g:MyCalcRounding")
+    return system("echo 'x=" . a:str . ";d=.5/10^" . g:MyCalcPresition
+          \. ";if (x<0) d=-d; x+=d; scale=" . g:MyCalcPresition . ";print x/1' | bc -l")
+  else
+    return system("echo 'scale=" . g:MyCalcPresition . " ; print " . a:str . "' | bc -l")
+  endif
+endfunction
+
+" Control the precision with this variable
+let g:MyCalcPresition = 2
+" Comment this if you don't want rounding
+let g:MyCalcRounding = 1
+" Use \C to replace the current line of math expression(s) by the value of the computation:
+map <silent> <Space>c :s/.*/\=MyCalc(submatch(0))/<CR>:noh<CR>
+" Same for a visual selection block
+vmap <silent> <Space>c :B s/.*/\=MyCalc(submatch(0))/<CR>:noh<CR>
+" With \C= don't replace, but add the result at the end of the current line
+map <silent> <Space>c= :s/.*/\=submatch(0) . " = " . MyCalc(submatch(0))/<CR>:noh<CR>
+" Same for a visual selection block
+vmap <silent> <Space>c= :B s/.*/\=submatch(0) . " = " . MyCalc(submatch(0))/<CR>:noh<CR>
+" Try: :B s/.*/\=MyCalc("1000 - " . submatch(0))/
+" The concatenation is important, since otherwise it will try
+" to evaluate things like in ":echo 1000 - ' 1748.24'"
+vmap <Space>c+ :B s/.*/\=MyCalc(' +' . submatch(0))/<C-Left><C-Left><C-Left><Left>
+vmap <Space>c- :B s/.*/\=MyCalc(' -' . submatch(0))/<C-Left><C-Left><C-Left><Left>
+" With \Cs you add a block of expressions, whose result appears in the command line
+vmap <silent> <Space>ct y:echo MyCalc(substitute(@0," *\n","+","g"))<CR>:silent :noh<CR>
+" Try: :MyCalc 12.7 + sqrt(98)
+command! -nargs=+ MyCalc :echo MyCalc("<args>")
+" ------------------------------------------------------------
+"

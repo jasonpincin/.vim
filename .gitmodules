@@ -58,3 +58,15 @@
 [submodule "bundle/Command-T"]
 	path = bundle/Command-T
 	url = https://github.com/wincent/Command-T
+[submodule "bundle/vim-indent-guides"]
+	path = bundle/vim-indent-guides
+	url = https://github.com/nathanaelkane/vim-indent-guides
+[submodule "bundle/vim-session"]
+	path = bundle/vim-session
+	url = https://github.com/xolox/vim-session
+[submodule "bundle/simple_bookmerks"]
+	path = bundle/simple_bookmerks
+	url = https://github.com/AndrewRadev/simple_bookmarks.vim
+[submodule "bundle/simple_bookmarks"]
+	path = bundle/simple_bookmarks
+	url = https://github.com/AndrewRadev/simple_bookmarks.vim
