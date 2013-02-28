@@ -10,3 +10,6 @@
 [submodule "bundle/SearchParty"]
 	path = bundle/SearchParty
 	url = https://github.com/dahu/SearchParty
+[submodule "bundle/vim-fugative"]
+	path = bundle/vim-fugative
+	url = git://github.com/tpope/vim-fugitive.git

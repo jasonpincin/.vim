@@ -1,7 +1,9 @@
 execute pathogen#infect()
 execute pathogen#helptags()
-syntax on
 filetype plugin indent on
+syntax on
+set number
+highlight clear SignColumn
 
 " Multi Cursor
 " ------------------------------------------------------------
