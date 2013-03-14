@@ -2,13 +2,14 @@ set nocompatible   " Disable vi-compatibility
 set laststatus=2   " Always show the statusline
 set encoding=utf-8 " Necessary to show Unicode glyphs
 set t_Co=256       " Explicitly tell Vim that the terminal supports 256 colors
+set hidden
 
 set tabstop=4
 set shiftwidth=4
 set expandtab
 set smarttab
-set smartindent
 set autoindent
+set nofoldenable
 
 execute pathogen#infect()
 execute pathogen#helptags()
@@ -35,10 +36,50 @@ set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " xnoremap <space>c :!octave --silent \| cut -c8-<cr>
 
+" Paste to target indent
+" ------------------------------------------------------------
+nnoremap <Space>p p`[v`]=
+" ------------------------------------------------------------
+
+" Basic buffer maps
+" ------------------------------------------------------------
+nnoremap bn :bn<CR>
+nnoremap bp :bp<CR>
+nnoremap bg :e#<CR>
+" ------------------------------------------------------------
+
+" Javascript comlpetion
+" ------------------------------------------------------------
+let g:nodejs_complete_config = {
+\  'js_compl_fn': 'jscomplete#CompleteJS',
+\  'max_node_compl_len': 15
+\}
+" automatically open and close the popup menu / preview window
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
+" ------------------------------------------------------------
+
 " CommandT (P in my case) Power!
 " ------------------------------------------------------------
 set wildignore=.git,node_modules/**,*/node_modules/**,**/node_modules/**
 noremap <Leader>p :CommandT<CR>
+" ------------------------------------------------------------
+
+" Tabluar rocks
+" ------------------------------------------------------------
+"if exists(":Tabularize")
+  nnoremap <Space>= :Tabularize /=<CR>
+  vnoremap <Space>= :Tabularize /=<CR>
+  nnoremap <Space>: :Tabularize /:<CR>
+  vnoremap <Space>: :Tabularize /:<CR>
+"endif
+" ------------------------------------------------------------
+
+" Conq goodness
+" ------------------------------------------------------------
+let g:ConqueTerm_Color = 1
+let g:ConqueTerm_SessionSupport = 1
+let g:ConqueTerm_ToggleKey = '<Space>i'
+let g:ConqueTerm_ExecFileKey = '<Space>x'
 " ------------------------------------------------------------
 
 " Gists
@@ -64,11 +105,16 @@ nmap <Leader>e :Errors<CR>
 " nmap <Leader>r :TagbarToggle<CR>
 " ------------------------------------------------------------
 
+" NerdTree
+" ------------------------------------------------------------
+map <C-n> :NERDTreeToggle<CR>
+" ------------------------------------------------------------
 
 " Long bookmarks
 " ------------------------------------------------------------
 nnoremap <Leader>L :Bookmark 
 nnoremap <Leader>l :GotoBookmark 
+nnoremap <Leader>; :CopenBookmark<CR> 
 " ------------------------------------------------------------
 
 " Multi Cursor
@@ -207,4 +253,4 @@ vmap <silent> <Space>ct y:echo MyCalc(substitute(@0," *\n","+","g"))<CR>:silent 
 " Try: :MyCalc 12.7 + sqrt(98)
 command! -nargs=+ MyCalc :echo MyCalc("<args>")
 " ------------------------------------------------------------
-"
+

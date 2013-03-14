@@ -70,3 +70,21 @@
 [submodule "bundle/simple_bookmarks"]
 	path = bundle/simple_bookmarks
 	url = https://github.com/AndrewRadev/simple_bookmarks.vim
+[submodule "bundle/bufkill"]
+	path = bundle/bufkill
+	url = https://github.com/vim-scripts/bufkill.vim
+[submodule "bundle/jscomplete-vim"]
+	path = bundle/jscomplete-vim
+	url = https://github.com/teramako/jscomplete-vim
+[submodule "bundle/vim-nodejs-complete"]
+	path = bundle/vim-nodejs-complete
+	url = https://github.com/myhere/vim-nodejs-complete
+[submodule "bundle/nerdtree"]
+	path = bundle/nerdtree
+	url = https://github.com/scrooloose/nerdtree
+[submodule "bundle/vim-jade"]
+	path = bundle/vim-jade
+	url = git://github.com/digitaltoad/vim-jade.git
+[submodule "bundle/vim-stylus"]
+	path = bundle/vim-stylus
+	url = git@github.com:wavded/vim-stylus.git
