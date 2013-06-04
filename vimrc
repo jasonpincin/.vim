@@ -254,3 +254,4 @@ vmap <silent> <Space>ct y:echo MyCalc(substitute(@0," *\n","+","g"))<CR>:silent 
 command! -nargs=+ MyCalc :echo MyCalc("<args>")
 " ------------------------------------------------------------
 
+so /Users/jason/tern/vim/tern.vim
