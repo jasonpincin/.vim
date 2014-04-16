@@ -94,3 +94,6 @@
 [submodule "bundle/taskpaper"]
 	path = bundle/taskpaper
 	url = git@github.com:davidoc/taskpaper.vim.git
+[submodule "bundle/tern_for_vim"]
+	path = bundle/tern_for_vim
+	url = git@github.com:marijnh/tern_for_vim.git
