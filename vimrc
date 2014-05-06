@@ -48,6 +48,13 @@ nnoremap bp :bp<CR>
 nnoremap bg :e#<CR>
 " ------------------------------------------------------------
 
+
+" Powerline fonts
+" ------------------------------------------------------------
+let g:airline_powerline_fonts = 1
+" ------------------------------------------------------------
+
+
 " Javascript comlpetion
 " ------------------------------------------------------------
 let g:nodejs_complete_config = {
@@ -95,7 +102,7 @@ let g:github_api_url = 'http://git.www.euro-pro.local/api/v3'
 " Syntastic of more awesome
 " ------------------------------------------------------------
 let g:syntastic_check_on_open = 1
-let g:syntastic_javascript_checker = "jshint"
+let g:syntastic_enable_javascript_checker = "jshint"
 let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
 nmap <Leader>e :Errors<CR>
 " ------------------------------------------------------------
