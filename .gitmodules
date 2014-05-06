@@ -105,4 +105,4 @@
 	url = git@github.com:bling/vim-airline.git
 [submodule "bundle/tmuxline"]
 	path = bundle/tmuxline
-	url = https://github.com/edkolev/tmuxline.vim
+	url = git@github.com:edkolev/tmuxline.vim.git
