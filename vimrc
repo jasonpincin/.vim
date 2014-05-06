@@ -166,6 +166,11 @@ augroup resCur
 augroup END
 " ------------------------------------------------------------
 
+" Sessions
+" ------------------------------------------------------------
+let g:session_autoload = 'no'
+" ------------------------------------------------------------
+
 " Visual search & replace
 " ------------------------------------------------------------
 " Escape special characters in a string for exact matching.
