@@ -1,3 +1,6 @@
+set backupdir=~/.vim/tmp
+set dir=~/.vim/tmp
+
 set nocompatible   " Disable vi-compatibility
 set laststatus=2   " Always show the statusline
 set encoding=utf-8 " Necessary to show Unicode glyphs
@@ -35,6 +38,18 @@ endif
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " xnoremap <space>c :!octave --silent \| cut -c8-<cr>
+
+" Strip trailing white space
+" ------------------------------------------------------------
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+autocmd FileType c,cpp,java,php,ruby,python,javascript autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+" ------------------------------------------------------------
 
 " Paste to target indent
 " ------------------------------------------------------------
@@ -91,12 +106,18 @@ let g:ConqueTerm_ExecFileKey = '<Space>x'
 
 " Gists
 " ------------------------------------------------------------
+let g:fugitive_github_domains = ['https://gecgithub01.walmart.com']
+" ------------------------------------------------------------
+
+
+" Gists
+" ------------------------------------------------------------
 let g:gist_clip_command = 'pbcopy'
 let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 let g:gist_show_privates = 1
 let g:gist_post_private = 0
-let g:github_api_url = 'http://git.www.euro-pro.local/api/v3'
+let g:github_api_url = 'https://gecgithub01.walmart.com/api/v3'
 " ------------------------------------------------------------
 
 " Syntastic of more awesome
