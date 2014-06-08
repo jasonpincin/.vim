@@ -21,6 +21,7 @@ colorscheme smyck
 set cursorline
 " set cursorcolumn
 set number
+set relativenumber
 set pastetoggle=<F12>
 syntax on
 highlight clear SignColumn
@@ -82,7 +83,7 @@ au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
 
 " CommandT (P in my case) Power!
 " ------------------------------------------------------------
-set wildignore=.git,node_modules/**,*/node_modules/**,**/node_modules/**
+set wildignore=.git,coverage/**,node_modules/**,*/node_modules/**,**/node_modules/**
 noremap <Leader>p :CommandT<CR>
 " ------------------------------------------------------------
 
@@ -117,14 +118,37 @@ let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 let g:gist_show_privates = 1
 let g:gist_post_private = 0
-let g:github_api_url = 'https://gecgithub01.walmart.com/api/v3'
+let g:github_api_url = 'https://gecgithub01.walmart.com/api/v3/'
+let g:gist_api_url = 'https://gecgithub01.walmart.com/api/v3/'
 " ------------------------------------------------------------
 
 " Syntastic of more awesome
 " ------------------------------------------------------------
+function s:find_jshintrc(dir)
+    let l:found = globpath(a:dir, '.jshintrc')
+    if filereadable(l:found)
+        return l:found
+    endif
+
+    let l:parent = fnamemodify(a:dir, ':h')
+    if l:parent != a:dir
+        return s:find_jshintrc(l:parent)
+    endif
+
+    return "~/.jshintrc"
+endfunction
+
+function UpdateJsHintConf()
+    let l:dir = expand('%:p:h')
+    let l:jshintrc = s:find_jshintrc(l:dir)
+    let g:syntastic_javascript_jshint_conf = l:jshintrc
+endfunction
+
+au BufEnter * call UpdateJsHintConf()
+let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
 let g:syntastic_enable_javascript_checker = "jshint"
-let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
+" let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
 nmap <Leader>e :Errors<CR>
 " ------------------------------------------------------------
 
