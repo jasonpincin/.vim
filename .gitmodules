@@ -109,3 +109,6 @@
 [submodule "bundle/webapi-vim"]
 	path = bundle/webapi-vim
 	url = git@github.com:mattn/webapi-vim.git
+[submodule "bundle/w3m"]
+	path = bundle/w3m
+	url = git@github.com:yuratomo/w3m.vim.git
