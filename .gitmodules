@@ -112,3 +112,6 @@
 [submodule "bundle/w3m"]
 	path = bundle/w3m
 	url = git@github.com:yuratomo/w3m.vim.git
+[submodule "bundle/vim-tmux-navigator"]
+	path = bundle/vim-tmux-navigator
+	url = git@github.com:christoomey/vim-tmux-navigator.git
