@@ -118,3 +118,6 @@
 [submodule "bundle/haskellmode"]
 	path = bundle/haskellmode
 	url = git@github.com:lukerandall/haskellmode-vim.git
+[submodule "bundle/todo.txt"]
+	path = bundle/todo.txt
+	url = git@github.com:freitass/todo.txt-vim.git
