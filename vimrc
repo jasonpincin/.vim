@@ -40,6 +40,12 @@ set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " xnoremap <space>c :!octave --silent \| cut -c8-<cr>
 
+" Customize taskpaper
+" ------------------------------------------------------------
+nnoremap <buffer> <silent> <Leader>tn
+\    :<C-u>call taskpaper#toggle_tag('na', '')<CR>
+" ------------------------------------------------------------
+
 " Strip trailing white space
 " ------------------------------------------------------------
 fun! <SID>StripTrailingWhitespaces()
