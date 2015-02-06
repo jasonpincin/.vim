@@ -133,3 +133,6 @@
 [submodule "bundle/QFEnter"]
 	path = bundle/QFEnter
 	url = https://github.com/yssl/QFEnter.git
+[submodule "bundle/vimux"]
+	path = bundle/vimux
+	url = git@github.com:benmills/vimux.git
