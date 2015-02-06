@@ -130,3 +130,6 @@
 [submodule "bundle/vim-unimpaired"]
 	path = bundle/vim-unimpaired
 	url = git://github.com/tpope/vim-unimpaired.git
+[submodule "bundle/QFEnter"]
+	path = bundle/QFEnter
+	url = https://github.com/yssl/QFEnter.git
