@@ -87,6 +87,71 @@ let g:nodejs_complete_config = {
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
 " ------------------------------------------------------------
 
+" Toggle coverage
+" ------------------------------------------------------------
+noremap <Leader>c :IstanbulShow<CR>
+noremap <Leader>C :IstanbulHide<CR>
+" ------------------------------------------------------------
+
+" Find stuff
+" ------------------------------------------------------------
+noremap <Leader>G :execute "noautocmd vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+noremap <Leader>g :execute "noautocmd vimgrep /" . expand("<cword>") . "/j " . expand('%') <Bar> cw<CR>
+command! -nargs=+ Grep execute 'silent Ggrep! <args>' | cw
+command! -nargs=+ Vim execute 'noautocmd vimgrep /' . expand('<args>') . '/j **' | cw
+" ------------------------------------------------------------
+
+" Auto adjust size of quickfix window
+" ------------------------------------------------------------
+au FileType qf call AdjustWindowHeight(3, 30)
+function! AdjustWindowHeight(minheight, maxheight)
+    let l = 1
+    let n_lines = 0
+    let w_width = winwidth(0)
+    while l <= line('$')
+        " number to float for division
+        let l_len = strlen(getline(l)) + 0.0
+        let line_width = l_len/w_width
+        let n_lines += float2nr(ceil(line_width))
+        let l += 1
+    endw
+    exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
+endfunction
+" ------------------------------------------------------------
+
+" Toggle lists
+" ------------------------------------------------------------
+function! GetBufferList()
+  redir =>buflist
+  silent! ls
+  redir END
+  return buflist
+endfunction
+
+function! ToggleList(bufname, pfx)
+  let buflist = GetBufferList()
+  for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+    if bufwinnr(bufnum) != -1
+      exec(a:pfx.'close')
+      return
+    endif
+  endfor
+  if a:pfx == 'l' && len(getloclist(0)) == 0
+      echohl ErrorMsg
+      echo "Location List is Empty."
+      return
+  endif
+  let winnr = winnr()
+  exec(a:pfx.'open')
+  " if winnr() != winnr
+  "   wincmd p
+  " endif
+endfunction
+
+nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
+nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
+" ------------------------------------------------------------
+
 " CommandT (P in my case) Power!
 " ------------------------------------------------------------
 set wildignore=.git,coverage/**,node_modules/**,*/node_modules/**,**/node_modules/**
@@ -155,7 +220,7 @@ let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
 let g:syntastic_enable_javascript_checker = "jshint"
 " let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
-nmap <Leader>e :Errors<CR>
+" nmap <Leader>e :Errors<CR>
 " ------------------------------------------------------------
 
 " Tagbar, does't like #!/usr/bin/env node, so I yanked it
@@ -170,30 +235,9 @@ map <C-n> :NERDTreeToggle<CR>
 
 " Long bookmarks
 " ------------------------------------------------------------
-nnoremap <Leader>L :Bookmark 
-nnoremap <Leader>l :GotoBookmark 
+nnoremap <Leader>M :Bookmark 
+nnoremap <Leader>m :GotoBookmark 
 nnoremap <Leader>; :CopenBookmark<CR> 
-" ------------------------------------------------------------
-
-" Multi Cursor
-" ------------------------------------------------------------
-" Manually place cursors
-noremap <F2> :<c-u>call MultiCursorPlaceCursor()<cr>
-" Use Manually places cursors
-nnoremap <Leader>] :<c-u>call MultiCursorManual()<cr>
-" Cancel un-used manually placed cursors
-nnoremap <Leader>c :<c-u>call MultiCursorRemoveCursors()<cr>
-" Place one cursor per visually selected line
-"  - Prepend number (X)  before key combo to place 
-"    cursor every X lines
-xnoremap <F2> :<c-u>call MultiCursorVisual()<cr>
-" Place cursors via regular expressions
-nnoremap <Leader><F2> :<c-u>call MultiCursorSearch('')<cr>
-" Place a cursor at every word matching the word under 
-" the cursor
-nnoremap <Leader>w :<c-u>call MultiCursorSearch('<c-r><c-w>')<cr>
-" Go back to single cursor
-let g:multicursor_quit = "<Leader>C"
 " ------------------------------------------------------------
 
 " Indent guide
