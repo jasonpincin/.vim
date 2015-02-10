@@ -14,6 +14,8 @@ set smarttab
 set autoindent
 set nofoldenable
 
+set clipboard=unnamed
+
 execute pathogen#infect()
 execute pathogen#helptags()
 filetype plugin indent on
@@ -70,12 +72,10 @@ nnoremap bp :bp<CR>
 nnoremap bg :e#<CR>
 " ------------------------------------------------------------
 
-
 " Powerline fonts
 " ------------------------------------------------------------
 let g:airline_powerline_fonts = 1
 " ------------------------------------------------------------
-
 
 " Javascript comlpetion
 " ------------------------------------------------------------
@@ -85,6 +85,23 @@ let g:nodejs_complete_config = {
 \}
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
+" ------------------------------------------------------------
+
+" Toggle test stuff
+" ------------------------------------------------------------
+let g:testpane = 'none'
+function! ToggleTest()
+    if g:testpane == 'none'
+        let g:testpane = system('tmux split-window -p 85 -c `pwd` "nodemon -q -x npm test --dot" \; list-panes -a -F "#{pane_active} #D" \; swap-pane -U \; select-pane -l | grep "^1" | cut -d " " -f 2')
+    else
+        call system('tmux kill-pane -t '.g:testpane)
+        let g:testpane = 'none'
+    endif
+endfunction
+noremap <F2> :Make lint test<CR>
+noremap <F3> :Dispatch npm run coverage<CR>
+noremap <F4> :Make! browse-coverage<CR>
+noremap <F5> :call ToggleTest()<CR>
 " ------------------------------------------------------------
 
 " Toggle coverage
@@ -117,6 +134,11 @@ function! AdjustWindowHeight(minheight, maxheight)
     endw
     exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
+" ------------------------------------------------------------
+
+" Put lists in right spit
+" ------------------------------------------------------------
+autocmd FileType qf wincmd J
 " ------------------------------------------------------------
 
 " Toggle lists
@@ -212,7 +234,7 @@ endfunction
 function UpdateJsHintConf()
     let l:dir = expand('%:p:h')
     let l:jshintrc = s:find_jshintrc(l:dir)
-    let g:syntastic_javascript_jshint_conf = l:jshintrc
+    let g:syntastic_javascript_jshint_args = '--config ' . l:jshintrc
 endfunction
 
 au BufEnter * call UpdateJsHintConf()
