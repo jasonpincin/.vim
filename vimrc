@@ -90,6 +90,7 @@ au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
 " Toggle test stuff
 " ------------------------------------------------------------
 let g:testpane = 'none'
+let g:runpane = 'none'
 function! ToggleTest()
     if g:testpane == 'none'
         let g:testpane = system('tmux split-window -p 85 -c `pwd` "nodemon -q -x npm test --dot" \; list-panes -a -F "#{pane_active} #D" \; swap-pane -U \; select-pane -l | grep "^1" | cut -d " " -f 2')
@@ -98,10 +99,33 @@ function! ToggleTest()
         let g:testpane = 'none'
     endif
 endfunction
+function! CloseTest()
+    if g:testpane != 'none'
+        call system('tmux kill-pane -t '.g:testpane)
+        let g:testpane = 'none'
+    endif
+endfunction
+function! ToggleRun()
+    if g:runpane == 'none'
+        let g:runpane = system('tmux split-window -l 20 -c `pwd` "nodemon -q -x npm start" \; list-panes -a -F "#{pane_active} #D" \; select-pane -l | grep "^1" | cut -d " " -f 2')
+    else
+        call system('tmux kill-pane -t '.g:runpane)
+        let g:runpane = 'none'
+    endif
+endfunction
+function! CloseRun()
+    if g:runpane != 'none'
+        call system('tmux kill-pane -t '.g:runpane)
+        let g:runpane = 'none'
+    endif
+endfunction
 noremap <F2> :Make lint test<CR>
 noremap <F3> :Dispatch npm run coverage<CR>
 noremap <F4> :Make! browse-coverage<CR>
 noremap <F5> :call ToggleTest()<CR>
+noremap <F6> :call ToggleRun()<CR>
+autocmd VimLeave * :call CloseTest()
+autocmd VimLeave * :call CloseRun()
 " ------------------------------------------------------------
 
 " Toggle coverage
