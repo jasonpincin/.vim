@@ -34,6 +34,13 @@ if has('balloon_eval')
 endif
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+autocmd BufNewFile,BufReadPost *.yml set filetype=yaml
+autocmd BufNewFile,BufReadPost *.json set filetype=json
+
+au FileType yaml setl sw=2 sts=2
+au FileType markdown setl textwidth=80
+
+let g:vim_json_syntax_conceal = 0
 
 " Tell vim to remember certain things when we exit
 "  '10  :  marks will be remembered for up to 10 previously edited files
@@ -212,8 +219,8 @@ noremap <Leader>p :CommandT<CR>
 "if exists(":Tabularize")
   nnoremap <Space>= :Tabularize /=<CR>
   vnoremap <Space>= :Tabularize /=<CR>
-  nnoremap <Space>: :Tabularize /:<CR>
-  vnoremap <Space>: :Tabularize /:<CR>
+  nnoremap <Space>: :Tabularize /:/l0l1<CR>
+  vnoremap <Space>: :Tabularize /:/l0l1<CR>
 "endif
 " ------------------------------------------------------------
 
@@ -283,7 +290,9 @@ endfunction
 " au BufEnter * call UpdateJsHintConf()
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
-let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_checkers = [] " 'standard'
+autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc', '.;') !=# '' ? ['eslint'] : ['standard']
+autocmd FileType json let b:syntastic_checkers = ['jsonlint']
 " let g:syntastic_enable_javascript_checker = "eslint"
 " let g:syntastic_enable_javascript_checker = "jshint"
 " let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
