@@ -7,8 +7,8 @@ set encoding=utf-8 " Necessary to show Unicode glyphs
 set t_Co=256       " Explicitly tell Vim that the terminal supports 256 colors
 set hidden
 
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set smarttab
 set autoindent
@@ -129,13 +129,13 @@ function! CloseRun()
         let g:runpane = 'none'
     endif
 endfunction
-noremap <F2> :Make lint test<CR>
-noremap <F3> :Dispatch npm run coverage<CR>
-noremap <F4> :Make! browse-coverage<CR>
-noremap <F5> :call ToggleTest()<CR>
-noremap <F6> :call ToggleRun()<CR>
-autocmd VimLeave * :call CloseTest()
-autocmd VimLeave * :call CloseRun()
+" noremap <F2> :Make lint test<CR>
+" noremap <F3> :Dispatch npm run coverage<CR>
+" noremap <F4> :Make! browse-coverage<CR>
+" noremap <F5> :call ToggleTest()<CR>
+" noremap <F6> :call ToggleRun()<CR>
+" autocmd VimLeave * :call CloseTest()
+" autocmd VimLeave * :call CloseRun()
 " ------------------------------------------------------------
 
 " Toggle coverage
@@ -445,3 +445,8 @@ let g:tern_map_keys=1
 " let g:tern_show_argument_hints='on_hold'
 set completeopt=longest,menuone,preview
 " ------------------------------------------------------------
+
+" Wrap at 80 reminder
+" ------------------------------------------------------------
+highlight ColorColumn ctermbg=DarkCyan
+call matchadd('ColorColumn', '\%81v', 100)
