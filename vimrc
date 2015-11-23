@@ -7,14 +7,14 @@ set encoding=utf-8 " Necessary to show Unicode glyphs
 set t_Co=256       " Explicitly tell Vim that the terminal supports 256 colors
 set hidden
 
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set smarttab
 set autoindent
 set nofoldenable
 
-set clipboard=unnamed
+" set clipboard=unnamed
 
 execute pathogen#infect()
 execute pathogen#helptags()
@@ -25,12 +25,20 @@ set cursorline
 set number
 set relativenumber
 set pastetoggle=<F12>
+set ve=block
 syntax on
 highlight clear SignColumn
 
 if has('balloon_eval') 
     set ballooneval
 endif
+
+autocmd BufRead,BufNewFile /Users/jason/labs/* setlocal ts=4 sw=4
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+autocmd BufNewFile,BufReadPost *.yml set filetype=yaml
+
+au FileType yaml setl sw=2 sts=2
+au FileType markdown setl textwidth=80
 
 " Tell vim to remember certain things when we exit
 "  '10  :  marks will be remembered for up to 10 previously edited files
@@ -85,47 +93,6 @@ let g:nodejs_complete_config = {
 \}
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
-" ------------------------------------------------------------
-
-" Toggle test stuff
-" ------------------------------------------------------------
-let g:testpane = 'none'
-let g:runpane = 'none'
-function! ToggleTest()
-    if g:testpane == 'none'
-        let g:testpane = system('tmux split-window -p 85 -c `pwd` "nodemon -q -x npm test --dot" \; list-panes -a -F "#{pane_active} #D" \; swap-pane -U \; select-pane -l | grep "^1" | cut -d " " -f 2')
-    else
-        call system('tmux kill-pane -t '.g:testpane)
-        let g:testpane = 'none'
-    endif
-endfunction
-function! CloseTest()
-    if g:testpane != 'none'
-        call system('tmux kill-pane -t '.g:testpane)
-        let g:testpane = 'none'
-    endif
-endfunction
-function! ToggleRun()
-    if g:runpane == 'none'
-        let g:runpane = system('tmux split-window -l 20 -c `pwd` "nodemon -q -x npm start" \; list-panes -a -F "#{pane_active} #D" \; select-pane -l | grep "^1" | cut -d " " -f 2')
-    else
-        call system('tmux kill-pane -t '.g:runpane)
-        let g:runpane = 'none'
-    endif
-endfunction
-function! CloseRun()
-    if g:runpane != 'none'
-        call system('tmux kill-pane -t '.g:runpane)
-        let g:runpane = 'none'
-    endif
-endfunction
-noremap <F2> :Make lint test<CR>
-noremap <F3> :Dispatch npm run coverage<CR>
-noremap <F4> :Make! browse-coverage<CR>
-noremap <F5> :call ToggleTest()<CR>
-noremap <F6> :call ToggleRun()<CR>
-autocmd VimLeave * :call CloseTest()
-autocmd VimLeave * :call CloseRun()
 " ------------------------------------------------------------
 
 " Toggle coverage
@@ -209,8 +176,8 @@ noremap <Leader>p :CommandT<CR>
 "if exists(":Tabularize")
   nnoremap <Space>= :Tabularize /=<CR>
   vnoremap <Space>= :Tabularize /=<CR>
-  nnoremap <Space>: :Tabularize /:<CR>
-  vnoremap <Space>: :Tabularize /:<CR>
+  nnoremap <Space>: :Tabularize /:/l0l1<CR>
+  vnoremap <Space>: :Tabularize /:/l0l1<CR>
 "endif
 " ------------------------------------------------------------
 
@@ -241,6 +208,20 @@ let g:gist_api_url = 'https://gecgithub01.walmart.com/api/v3/'
 
 " Syntastic of more awesome
 " ------------------------------------------------------------
+" function s:find_eslintrc(dir)
+"     let l:found = globpath(a:dir, '.eslintrc')
+"     if filereadable(l:found)
+"         return l:found
+"     endif
+"
+"     let l:parent = fnamemodify(a:dir, ':h')
+"     if l:parent != a:dir
+"         return s:find_eslintrc(l:parent)
+"     endif
+"
+"     return "~/.eslintrc"
+" endfunction
+
 function s:find_jshintrc(dir)
     let l:found = globpath(a:dir, '.jshintrc')
     if filereadable(l:found)
@@ -257,14 +238,19 @@ endfunction
 
 function UpdateJsHintConf()
     let l:dir = expand('%:p:h')
-    let l:jshintrc = s:find_jshintrc(l:dir)
-    let g:syntastic_javascript_jshint_args = '--config ' . l:jshintrc
+    let l:eslintrc = s:find_eslintrc(l:dir)
+    " let l:jshintrc = s:find_jshintrc(l:dir)
+    let g:syntastic_javascript_eslint_args = '--config ' . l:eslintrc
+    " let g:syntastic_javascript_jshint_args = '--config ' . l:jshintrc
 endfunction
 
-au BufEnter * call UpdateJsHintConf()
+" au BufEnter * call UpdateJsHintConf()
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
-let g:syntastic_enable_javascript_checker = "jshint"
+let g:syntastic_javascript_checkers = [] " 'standard'
+autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc', '.;') !=# '' ? ['eslint'] : ['standard']
+" let g:syntastic_enable_javascript_checker = "eslint"
+" let g:syntastic_enable_javascript_checker = "jshint"
 " let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
 " nmap <Leader>e :Errors<CR>
 " ------------------------------------------------------------
@@ -407,4 +393,11 @@ vmap <silent> <Space>ct y:echo MyCalc(substitute(@0," *\n","+","g"))<CR>:silent 
 command! -nargs=+ MyCalc :echo MyCalc("<args>")
 " ------------------------------------------------------------
 
+" Tern
+" ------------------------------------------------------------
 " so /Users/jason/tern/vim/tern.vim
+let g:tern_map_keys=1
+" let tern#is_show_argument_hints_enabled=1
+" let g:tern_show_argument_hints='on_hold'
+set completeopt=longest,menuone,preview
+" ------------------------------------------------------------
