@@ -33,12 +33,14 @@ if has('balloon_eval')
     set ballooneval
 endif
 
-autocmd BufRead,BufNewFile /Users/jason/labs/* setlocal ts=4 sw=4
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufNewFile,BufReadPost *.yml set filetype=yaml
+autocmd BufNewFile,BufReadPost *.json set filetype=json
 
 au FileType yaml setl sw=2 sts=2
 au FileType markdown setl textwidth=80
+
+let g:vim_json_syntax_conceal = 0
 
 " Tell vim to remember certain things when we exit
 "  '10  :  marks will be remembered for up to 10 previously edited files
@@ -93,6 +95,47 @@ let g:nodejs_complete_config = {
 \}
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
+" ------------------------------------------------------------
+
+" Toggle test stuff
+" ------------------------------------------------------------
+let g:testpane = 'none'
+let g:runpane = 'none'
+function! ToggleTest()
+    if g:testpane == 'none'
+        let g:testpane = system('tmux split-window -p 85 -c `pwd` "nodemon -q -x npm test --dot" \; list-panes -a -F "#{pane_active} #D" \; swap-pane -U \; select-pane -l | grep "^1" | cut -d " " -f 2')
+    else
+        call system('tmux kill-pane -t '.g:testpane)
+        let g:testpane = 'none'
+    endif
+endfunction
+function! CloseTest()
+    if g:testpane != 'none'
+        call system('tmux kill-pane -t '.g:testpane)
+        let g:testpane = 'none'
+    endif
+endfunction
+function! ToggleRun()
+    if g:runpane == 'none'
+        let g:runpane = system('tmux split-window -l 20 -c `pwd` "nodemon -q -x npm start" \; list-panes -a -F "#{pane_active} #D" \; select-pane -l | grep "^1" | cut -d " " -f 2')
+    else
+        call system('tmux kill-pane -t '.g:runpane)
+        let g:runpane = 'none'
+    endif
+endfunction
+function! CloseRun()
+    if g:runpane != 'none'
+        call system('tmux kill-pane -t '.g:runpane)
+        let g:runpane = 'none'
+    endif
+endfunction
+" noremap <F2> :Make lint test<CR>
+" noremap <F3> :Dispatch npm run coverage<CR>
+" noremap <F4> :Make! browse-coverage<CR>
+" noremap <F5> :call ToggleTest()<CR>
+" noremap <F6> :call ToggleRun()<CR>
+" autocmd VimLeave * :call CloseTest()
+" autocmd VimLeave * :call CloseRun()
 " ------------------------------------------------------------
 
 " Toggle coverage
@@ -249,6 +292,7 @@ let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
 let g:syntastic_javascript_checkers = [] " 'standard'
 autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc', '.;') !=# '' ? ['eslint'] : ['standard']
+autocmd FileType json let b:syntastic_checkers = ['jsonlint']
 " let g:syntastic_enable_javascript_checker = "eslint"
 " let g:syntastic_enable_javascript_checker = "jshint"
 " let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
@@ -401,3 +445,8 @@ let g:tern_map_keys=1
 " let g:tern_show_argument_hints='on_hold'
 set completeopt=longest,menuone,preview
 " ------------------------------------------------------------
+
+" Wrap at 80 reminder
+" ------------------------------------------------------------
+highlight ColorColumn ctermbg=DarkCyan
+call matchadd('ColorColumn', '\%81v', 100)

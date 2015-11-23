@@ -136,3 +136,9 @@
 [submodule "bundle/vimux"]
 	path = bundle/vimux
 	url = git@github.com:benmills/vimux.git
+[submodule "bundle/SyntaxRange"]
+	path = bundle/SyntaxRange
+	url = https://github.com/vim-scripts/SyntaxRange.git
+[submodule "bundle/vim-json"]
+	path = bundle/vim-json
+	url = https://github.com/elzr/vim-json.git
