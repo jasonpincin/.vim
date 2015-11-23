@@ -33,6 +33,8 @@ if has('balloon_eval')
     set ballooneval
 endif
 
+autocmd BufRead,BufNewFile /Users/jason/labs/* setlocal ts=4 sw=4
+
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufNewFile,BufReadPost *.yml set filetype=yaml
 autocmd BufNewFile,BufReadPost *.json set filetype=json
