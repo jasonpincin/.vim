@@ -54,6 +54,10 @@ set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " xnoremap <space>c :!octave --silent \| cut -c8-<cr>
 
+function! StrTrim(txt)
+  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
 " Customize taskpaper
 " ------------------------------------------------------------
 nnoremap <buffer> <silent> <Leader>tn
@@ -97,47 +101,6 @@ let g:nodejs_complete_config = {
 \}
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif"
-" ------------------------------------------------------------
-
-" Toggle test stuff
-" ------------------------------------------------------------
-let g:testpane = 'none'
-let g:runpane = 'none'
-function! ToggleTest()
-    if g:testpane == 'none'
-        let g:testpane = system('tmux split-window -p 85 -c `pwd` "nodemon -q -x npm test --dot" \; list-panes -a -F "#{pane_active} #D" \; swap-pane -U \; select-pane -l | grep "^1" | cut -d " " -f 2')
-    else
-        call system('tmux kill-pane -t '.g:testpane)
-        let g:testpane = 'none'
-    endif
-endfunction
-function! CloseTest()
-    if g:testpane != 'none'
-        call system('tmux kill-pane -t '.g:testpane)
-        let g:testpane = 'none'
-    endif
-endfunction
-function! ToggleRun()
-    if g:runpane == 'none'
-        let g:runpane = system('tmux split-window -l 20 -c `pwd` "nodemon -q -x npm start" \; list-panes -a -F "#{pane_active} #D" \; select-pane -l | grep "^1" | cut -d " " -f 2')
-    else
-        call system('tmux kill-pane -t '.g:runpane)
-        let g:runpane = 'none'
-    endif
-endfunction
-function! CloseRun()
-    if g:runpane != 'none'
-        call system('tmux kill-pane -t '.g:runpane)
-        let g:runpane = 'none'
-    endif
-endfunction
-" noremap <F2> :Make lint test<CR>
-" noremap <F3> :Dispatch npm run coverage<CR>
-" noremap <F4> :Make! browse-coverage<CR>
-" noremap <F5> :call ToggleTest()<CR>
-" noremap <F6> :call ToggleRun()<CR>
-" autocmd VimLeave * :call CloseTest()
-" autocmd VimLeave * :call CloseRun()
 " ------------------------------------------------------------
 
 " Toggle coverage
@@ -293,6 +256,7 @@ endfunction
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
 let g:syntastic_javascript_checkers = [] " 'standard'
+autocmd FileType javascript let b:syntastic_javascript_standard_exec = StrTrim(system('~/.vim/bin/npm-which ' . expand('%') . ' standard'))
 autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc', '.;') !=# '' ? ['eslint'] : ['standard']
 autocmd FileType json let b:syntastic_checkers = ['jsonlint']
 " let g:syntastic_enable_javascript_checker = "eslint"
