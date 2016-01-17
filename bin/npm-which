@@ -3,8 +3,6 @@
 dir=$(dirname $1)
 cd $dir
 
-echo $dir >> ~/npm-which.log
-
 npm_bin=$(npm bin)
 bin_name=$2
 local_path="${npm_bin}/${bin_name}"
