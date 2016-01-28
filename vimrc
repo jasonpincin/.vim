@@ -33,7 +33,12 @@ if has('balloon_eval')
     set ballooneval
 endif
 
-autocmd BufRead,BufNewFile /Users/jason/labs/* setlocal ts=4 sw=4
+" Settings by project
+" ------------------------------------------------------------
+au BufReadPost,BufNewFile /Users/jason/Documents/labs/* setl ts=4 sw=4
+au BufReadPost,BufNewFile /Users/jason/github/* highlight ColorColumn ctermbg=DarkCyan
+au BufReadPost,BufNewFile /Users/jason/github/* call matchadd('ColorColumn', '\%81v', 100)
+" ------------------------------------------------------------
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufNewFile,BufReadPost *.yml set filetype=yaml
