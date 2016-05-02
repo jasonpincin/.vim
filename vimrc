@@ -33,6 +33,8 @@ if has('balloon_eval')
     set ballooneval
 endif
 
+inoremap \\ <ESC>
+
 " Settings by project
 " ------------------------------------------------------------
 au BufReadPost,BufNewFile /Users/jason/Documents/labs/* setl ts=4 sw=4
@@ -91,6 +93,7 @@ nnoremap <Space>p p`[v`]=
 nnoremap bn :bn<CR>
 nnoremap bp :bp<CR>
 nnoremap bg :e#<CR>
+nnoremap bb :CtrlPBuffer<CR>
 " ------------------------------------------------------------
 
 " Powerline fonts
@@ -421,3 +424,37 @@ set completeopt=longest,menuone,preview
 " ------------------------------------------------------------
 highlight ColorColumn ctermbg=DarkCyan
 call matchadd('ColorColumn', '\%81v', 100)
+
+" Toggle between relative and absolute numbers
+" ------------------------------------------------------------
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunc
+
+nnoremap <C-n> :call NumberToggle()<cr>
+" ------------------------------------------------------------
+
+" CtrlP
+" ------------------------------------------------------------
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.log,*/coverage/*,*/node_modules/*
+"let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+"let g:ctrlp_custom_ignore = {
+""  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+""  \ }
+
+let g:ctrlp_use_caching = 0
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor
+
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+else
+  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+  let g:ctrlp_prompt_mappings = {
+    \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
+    \ }
+endif
+" ------------------------------------------------------------
