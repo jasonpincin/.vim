@@ -435,7 +435,8 @@ function! NumberToggle()
   endif
 endfunc
 
-nnoremap <C-n> :call NumberToggle()<cr>
+" nnoremap <Space>n :call NumberToggle()<cr>
+nnoremap <Space>n :NumbersToggle<cr>
 " ------------------------------------------------------------
 
 " CtrlP
