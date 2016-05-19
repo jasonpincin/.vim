@@ -1,3 +1,4 @@
+set guifont=Inconsolata-dz\ for\ Powerline:h13
 set backupdir=~/.vim/tmp
 set dir=~/.vim/tmp
 
