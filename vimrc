@@ -8,8 +8,8 @@ set encoding=utf-8 " Necessary to show Unicode glyphs
 set t_Co=256       " Explicitly tell Vim that the terminal supports 256 colors
 set hidden
 
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set expandtab
 set smarttab
 set autoindent
@@ -38,9 +38,10 @@ inoremap \\ <ESC>
 
 " Settings by project
 " ------------------------------------------------------------
-au BufReadPost,BufNewFile /Users/jason/Documents/labs/* setl ts=4 sw=4
+" au BufReadPost,BufNewFile /Users/jason/Documents/labs/* setl ts=4 sw=4
 au BufReadPost,BufNewFile /Users/jason/github/* highlight ColorColumn ctermbg=DarkCyan
 au BufReadPost,BufNewFile /Users/jason/github/* call matchadd('ColorColumn', '\%81v', 100)
+au BufReadPost,BufNewFile /Users/jason/Documents/labs/* call matchadd('ColorColumn', '\%121v', 100)
 " ------------------------------------------------------------
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -225,6 +226,7 @@ let g:gist_api_url = 'https://gecgithub01.walmart.com/api/v3/'
 
 " Syntastic of more awesome
 " ------------------------------------------------------------
+noremap <Leader>s :SyntasticToggleMode<CR>
 " function s:find_eslintrc(dir)
 "     let l:found = globpath(a:dir, '.eslintrc')
 "     if filereadable(l:found)
@@ -423,8 +425,8 @@ set completeopt=longest,menuone,preview
 
 " Wrap at 80 reminder
 " ------------------------------------------------------------
-highlight ColorColumn ctermbg=DarkCyan
-call matchadd('ColorColumn', '\%81v', 100)
+" highlight ColorColumn ctermbg=DarkCyan
+" call matchadd('ColorColumn', '\%81v', 100)
 
 " Toggle between relative and absolute numbers
 " ------------------------------------------------------------
