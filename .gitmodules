@@ -1,6 +1,3 @@
-[submodule "bundle/bim-multicursor"]
-	path = bundle/bim-multicursor
-	url = https://github.com/paradigm/vim-multicursor
 [submodule "bundle/vim-gitgutter"]
 	path = bundle/vim-gitgutter
 	url = git://github.com/airblade/vim-gitgutter.git
