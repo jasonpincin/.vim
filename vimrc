@@ -34,14 +34,13 @@ if has('balloon_eval')
     set ballooneval
 endif
 
-inoremap \\ <ESC>
-
 " Settings by project
 " ------------------------------------------------------------
 " au BufReadPost,BufNewFile /Users/jason/Documents/labs/* setl ts=4 sw=4
-au BufReadPost,BufNewFile /Users/jason/github/* highlight ColorColumn ctermbg=DarkCyan
-au BufReadPost,BufNewFile /Users/jason/github/* call matchadd('ColorColumn', '\%81v', 100)
-au BufReadPost,BufNewFile /Users/jason/Documents/labs/* call matchadd('ColorColumn', '\%121v', 100)
+au BufReadPost,BufNewFile /Users/jason/projects/cn/* setl ts=2 sw=2
+au BufReadPost,BufNewFile /Users/jason/projects/gh/* highlight ColorColumn ctermbg=DarkCyan
+au BufReadPost,BufNewFile /Users/jason/projects/gh/* call matchadd('ColorColumn', '\%81v', 100)
+au BufReadPost,BufNewFile /Users/jason/projects/labs/* call matchadd('ColorColumn', '\%121v', 100)
 " ------------------------------------------------------------
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -66,6 +65,11 @@ set viminfo='10,\"100,:20,%,n~/.viminfo
 function! StrTrim(txt)
   return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
+
+" JS Doc
+" ------------------------------------------------------------
+nnoremap <Leader>jd :JsDoc<CR> 
+" ------------------------------------------------------------
 
 " Customize taskpaper
 " ------------------------------------------------------------
