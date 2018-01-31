@@ -40,7 +40,8 @@ endif
 au BufReadPost,BufNewFile /Users/jason/projects/cn/* setl ts=2 sw=2
 au BufReadPost,BufNewFile /Users/jason/projects/gh/* highlight ColorColumn ctermbg=DarkCyan
 au BufReadPost,BufNewFile /Users/jason/projects/gh/* call matchadd('ColorColumn', '\%81v', 100)
-au BufReadPost,BufNewFile /Users/jason/projects/labs/* call matchadd('ColorColumn', '\%121v', 100)
+au BufReadPost,BufNewFile /Users/jason/projects/cn/* call matchadd('ColorColumn', '\%81v', 100)
+" au BufReadPost,BufNewFile /Users/jason/projects/labs/* call matchadd('ColorColumn', '\%121v', 100)
 " ------------------------------------------------------------
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -272,7 +273,9 @@ let g:syntastic_always_populate_loc_list=1
 let g:syntastic_check_on_open = 1
 let g:syntastic_javascript_checkers = [] " 'standard'
 autocmd FileType javascript let b:syntastic_javascript_standard_exec = StrTrim(system('~/.vim/bin/npm-which ' . expand('%') . ' standard'))
+autocmd FileType javascript let b:syntastic_javascript_eslint_exec = StrTrim(system('~/.vim/bin/npm-which ' . expand('%') . ' eslint'))
 autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc', '.;') !=# '' ? ['eslint'] : ['standard']
+autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc.js', '.;') !=# '' ? ['eslint'] : b:syntastic_checkers
 autocmd FileType json let b:syntastic_checkers = ['jsonlint']
 " let g:syntastic_enable_javascript_checker = "eslint"
 " let g:syntastic_enable_javascript_checker = "jshint"
@@ -465,4 +468,18 @@ else
     \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
     \ }
 endif
+" ------------------------------------------------------------
+
+" JSDoc
+" ------------------------------------------------------------
+nnoremap <Space>d :JsDoc<cr>
+let g:jsdoc_allow_input_prompt=1
+let g:jsdoc_input_description=1
+let g:jsdoc_enable_es6=1
+let g:jsdoc_param_description_separator=' - '
+" ------------------------------------------------------------
+
+" BufferGator
+" ------------------------------------------------------------
+let g:buffergator_viewport_split_policy='T'
 " ------------------------------------------------------------
