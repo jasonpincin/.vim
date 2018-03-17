@@ -36,13 +36,24 @@ if has('balloon_eval')
     set ballooneval
 endif
 
+nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 1/2)<CR>
+nnoremap <leader>z :bo term<CR>
+nnoremap <leader>z :bo term<CR>
+set guioptions=
+set fillchars=
+hi VertSplit guibg=darkgrey guifg=darkgrey ctermbg=darkgrey ctermfg=darkgrey
+highlight OverLength ctermbg=darkred ctermfg=white guibg=#993939 guifg=#ffffff
+let NERDTreeQuitOnOpen=1
+
+au FileType qf setlocal nonumber colorcolumn=
+au FileType javascript setl ts=2 sw=2
+au FileType javascript,python,shell :match OverLength /\%>80v.\+/
 " Settings by project
 " ------------------------------------------------------------
 " au BufReadPost,BufNewFile /Users/jason/Documents/labs/* setl ts=4 sw=4
-au BufReadPost,BufNewFile ~/projects/gh/* highlight ColorColumn ctermbg=DarkCyan
-au BufReadPost,BufNewFile ~/projects/gh/* call matchadd('ColorColumn', '\%81v', 100)
-au BufReadPost,BufNewFile ~/projects/cn/* setl ts=2 sw=2
-au BufReadPost,BufNewFile ~/projects/cn/* call matchadd('ColorColumn', '\%81v', 100)
+" au BufReadPost,BufNewFile ~/projects/gh/* call matchadd('OverLength', '\%>80v.\+')
+" au BufReadPost,BufNewFile ~/projects/cn/* call matchadd('OverLength', '\%>80v.\+')
 " au BufReadPost,BufNewFile /Users/jason/projects/labs/* call matchadd('ColorColumn', '\%121v', 100)
 " ------------------------------------------------------------
 
@@ -107,8 +118,8 @@ nnoremap bb :CtrlPBuffer<CR>
 
 " Powerline fonts
 " ------------------------------------------------------------
-let g:airline_powerline_fonts = 0
-let g:tmuxline_powerline_separators = 0
+let g:airline_powerline_fonts = 1
+let g:tmuxline_powerline_separators = 1
 " ------------------------------------------------------------
 
 " Javascript comlpetion
@@ -283,7 +294,7 @@ autocmd FileType json let b:syntastic_checkers = ['jsonlint']
 " let g:syntastic_enable_javascript_checker = "eslint"
 " let g:syntastic_enable_javascript_checker = "jshint"
 " let g:syntastic_javascript_jshint_conf = "~/.jshintrc"
-" nmap <Leader>e :Errors<CR>
+nmap <Leader>e :Errors<CR>
 " ------------------------------------------------------------
 
 " Tagbar, does't like #!/usr/bin/env node, so I yanked it

@@ -145,3 +145,6 @@
 [submodule "bundle/vim-jsdoc"]
 	path = bundle/vim-jsdoc
 	url = git@github.com:heavenshell/vim-jsdoc.git
+[submodule "bundle/splitjoin"]
+	path = bundle/splitjoin
+	url = git@github.com:AndrewRadev/splitjoin.vim.git
